@@ -8,6 +8,7 @@ using BookLoan.Application.DTOs;
 using BookLoan.Application.Interfaces;
 
 using BookLoan.Domain.Entities;
+using BookLoan.Domain.Pagination;
 using Loan.Domain.Interfaces;
 
 namespace LoanLoan.Application.Services
@@ -24,12 +25,21 @@ namespace LoanLoan.Application.Services
             _mapper = mapper;
         }
 
-        public async Task<IEnumerable<LoanDTO>> FindAll()
+        public async Task<PagedList<LoanDTO>> FindAll(int pageNumber, int pageSize)
         {
-            IEnumerable<BookLoan.Domain.Entities.Loan> loans = await _loanRepository.FindAll();
+            var loans = await _loanRepository.FindAll(pageNumber, pageSize);
             IEnumerable<LoanDTO> loanDtos = _mapper.Map<IEnumerable<LoanDTO>>(loans);
-            return loanDtos;
+            return new PagedList<LoanDTO>(loanDtos, pageNumber, pageSize, loans.TotalCount);
 
+        }
+
+        public async Task<PagedList<LoanDTO>> FindByFilter(string cpf, string name, DateTime? loanDateInitial, DateTime? loanDateFinal,
+            DateTime? deliverDateInitial, DateTime? deliverDateFinal, bool? delivered, bool? notDelivered, int pageNumber,
+            int pageSize)
+        {
+            var loans = await _loanRepository.FindByFilter(cpf, name, loanDateInitial, loanDateFinal, deliverDateInitial, deliverDateFinal, delivered, notDelivered, pageNumber, pageSize);
+            var loansDTO = _mapper.Map<IEnumerable<LoanDTO>>(loans);
+            return new PagedList<LoanDTO>(loansDTO, pageNumber, pageSize, loans.TotalCount);
         }
 
         public async Task<LoanDTO> FindById(int id)
@@ -53,6 +63,13 @@ namespace LoanLoan.Application.Services
             BookLoan.Domain.Entities.Loan loan = _mapper.Map<BookLoan.Domain.Entities.Loan>(loanDTO);
             BookLoan.Domain.Entities.Loan loanChanged = await _loanRepository.Update(loan);
             return _mapper.Map<LoanDTO>(loanChanged);
+        }
+
+        public async Task<bool> VerifyAvailable(int id)
+        {
+
+            return await _loanRepository.VerifyAvailable(id);
+           
         }
 
         public async Task<LoanDTO> Delete(int id)

@@ -1,5 +1,6 @@
 
 using BookLoan.API.Context;
+using BookLoan.API.Middleware;
 using BookLoan.Infra.Ioc;
 using Microsoft.EntityFrameworkCore;
 
@@ -32,6 +33,11 @@ namespace BookLoan.API
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
+
+            // MIDDLEWARE DE ERRO PERSONALIZADO 
+            app.UseMiddleware<ExceptionMiddleware>();
+            //
+
 
             app.UseHttpsRedirection();
 

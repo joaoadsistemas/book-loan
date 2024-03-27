@@ -1,6 +1,8 @@
 ﻿using BookLoan.API.Context;
 using BookLoan.Domain.Entities;
 using BookLoan.Domain.Interfaces;
+using BookLoan.Domain.Pagination;
+using BookLoan.Infra.Data.Helpers;
 using Microsoft.EntityFrameworkCore;
 
 namespace BookLoan.Infra.Data.Repositories
@@ -15,12 +17,78 @@ namespace BookLoan.Infra.Data.Repositories
             _dbContext = dbContext;
         }
 
-        public async Task<IEnumerable<Client>> FindAll()
+        public async Task<PagedList<Client>> FindAll(int pageNumber, int pageSize)
         {
-            List<Client> clients = await _dbContext.Clients.Where(c => !c.Deleted)
+            var query = _dbContext.Clients.Where(c => !c.Deleted)
                 .AsNoTracking()
-                .ToListAsync();
-            return clients;
+                .AsQueryable();
+
+            return await PaginationHelper.CreateAsync(query, pageNumber, pageSize);
+
+        }
+
+        public async Task<PagedList<Client>> FindByFilter(string cpf, string name, string city, string neighbourhood, string phoneNumber, string fixPhoneNumber,
+            int pageNumber, int pageSize)
+        {
+            var query = _dbContext.Clients.Where(x => !x.Deleted).OrderByDescending(x => x.Id).AsQueryable();
+
+            if (!string.IsNullOrEmpty(cpf))
+            {
+                query = query.Where(x => x.Cpf.Equals(cpf));
+            }
+
+            if (!string.IsNullOrEmpty(name))
+            {
+                query = query.Where(x => x.Name.ToLower().Equals(name.ToLower())
+                                         || x.Name.ToLower().Contains(name.ToLower()));
+            }
+
+            if (!string.IsNullOrEmpty(city))
+            {
+                query = query.Where(x => x.City.ToLower().Equals(city.ToLower())
+                                         || x.City.ToLower().Contains(city.ToLower()));
+            }
+
+            if (!string.IsNullOrEmpty(neighbourhood))
+            {
+                query = query.Where(x => x.Neighborhood.ToLower().Equals(neighbourhood.ToLower())
+                                         || x.Neighborhood.ToLower().Contains(neighbourhood.ToLower()));
+            }
+
+            if (!string.IsNullOrEmpty(phoneNumber))
+            {
+                query = query.Where(x => x.PhoneNumber.Equals(phoneNumber));
+            }
+
+            if (!string.IsNullOrEmpty(fixPhoneNumber))
+            {
+                query = query.Where(x => x.FixPhoneNumber.Equals(fixPhoneNumber));
+            }
+
+            return await PaginationHelper.CreateAsync(query, pageNumber, pageSize);
+        }
+
+        public async Task<PagedList<Client>> FindByFilter(string term, int pageNumber, int pageSize)
+        {
+
+            var query = _dbContext.Clients.Where(x => !x.Deleted).OrderByDescending(x => x.Id).AsQueryable();
+
+            if (!string.IsNullOrEmpty(term))
+            {
+                term = term.ToLower();
+
+                query = query.Where(x =>
+                    x.Name.ToLower().Contains(term) ||
+                    x.Cpf.Contains(term) ||
+                    x.City.ToLower().Contains(term) ||
+                    x.Neighborhood.ToLower().Contains(term) ||
+                    x.PhoneNumber.Contains(term) ||
+                    x.FixPhoneNumber.Contains(term)
+                );
+            }
+
+            return await PaginationHelper.CreateAsync(query, pageNumber, pageSize);
+
         }
 
         public async Task<Client> FindById(int id)

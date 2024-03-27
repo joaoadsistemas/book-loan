@@ -1,6 +1,8 @@
 ﻿using BookLoan.API.Context;
 using BookLoan.Domain.Entities;
 using BookLoan.Domain.Interfaces;
+using BookLoan.Domain.Pagination;
+using BookLoan.Infra.Data.Helpers;
 using Microsoft.EntityFrameworkCore;
 
 namespace BookLoan.Infra.Data.Repositories
@@ -15,12 +17,48 @@ namespace BookLoan.Infra.Data.Repositories
             _dbContext = dbContext;
         }
 
-        public async Task<IEnumerable<User>> FindAll()
+        public async Task<PagedList<User>> FindAll(int pageNumber, int pageSize)
         {
-            List<User> users = await _dbContext.Users
+            var query = _dbContext.Users
                 .AsNoTracking()
-                .ToListAsync();
-            return users;
+                .AsQueryable();
+            return await PaginationHelper.CreateAsync(query, pageNumber, pageSize);
+        }
+
+        public async Task<PagedList<User>> FindAllByFilterAsync(string name, string email, bool? isAdmin, bool? isNotAdmin, bool? active, bool? inactive, int pageNumber, int pageSize)
+        {
+            var query = _dbContext.Users.OrderByDescending(x => x.Id).AsQueryable();
+
+            if (!string.IsNullOrEmpty(name))
+            {
+                query = query.Where(x => x.Name.ToLower().Equals(name.ToLower())
+                                         || x.Name.ToLower().Contains(name.ToLower()));
+            }
+
+            if (!string.IsNullOrEmpty(email))
+            {
+                query = query.Where(x => x.Email.ToLower().Equals(email.ToLower())
+                                         || x.Email.ToLower().Contains(email.ToLower()));
+            }
+
+            if (isAdmin.HasValue && isAdmin == true)
+            {
+                query = query.Where(x => x.IsAdmin == true);
+            }
+            if (isNotAdmin.HasValue && isNotAdmin == true)
+            {
+                query = query.Where(x => x.IsAdmin == false);
+            }
+            if (active.HasValue && active == true)
+            {
+                query = query.Where(x => x.Active == true);
+            }
+            if (inactive.HasValue && inactive == true)
+            {
+                query = query.Where(x => x.Active == false);
+            }
+
+            return await PaginationHelper.CreateAsync(query, pageNumber, pageSize);
         }
 
         public async Task<User> FindById(int id)
@@ -41,9 +79,22 @@ namespace BookLoan.Infra.Data.Repositories
 
         public async Task<User> Update(User user)
         {
+            if (user.PasswordSalt == null || user.PasswordHash == null)
+            {
+                var passwordCript = await _dbContext.Users.Where(x => x.Id == user.Id).Select(x => new { x.PasswordHash, x.PasswordSalt }).FirstOrDefaultAsync();
+                user.ChangePassword(passwordCript.PasswordHash, passwordCript.PasswordSalt);
+            }
+
             _dbContext.Users.Update(user);
             await _dbContext.SaveChangesAsync();
             return user;
+        }
+
+        public async Task<bool> ExistsUserRegistered()
+        {
+
+            return await _dbContext.Users.AnyAsync();
+
         }
 
         public async Task<User> Delete(int id)

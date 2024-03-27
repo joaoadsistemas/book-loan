@@ -1,5 +1,8 @@
-﻿using BookLoan.Application.DTOs;
+﻿using BookLoan.API.Extensions;
+using BookLoan.API.Models;
+using BookLoan.Application.DTOs;
 using BookLoan.Application.Interfaces;
+using BookLoan.Application.Services;
 using BookLoan.Domain.Entities;
 using BookLoan.Infra.Ioc;
 using Microsoft.AspNetCore.Authorization;
@@ -10,6 +13,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace BookLoan.API.Controllers
 {
     [Route("api/[controller]")]
+    [Authorize]
     [ApiController]
     public class ClientController : ControllerBase
     {
@@ -25,10 +29,43 @@ namespace BookLoan.API.Controllers
 
 
         [HttpGet]
-        public async Task<ActionResult> FindAll()
+        public async Task<ActionResult> FindAll(PaginationParams paginationParams)
         {
-            return Ok(await _clientService.FindAll());
+            var clientsDto = await _clientService.FindAll(paginationParams.PageNumber, paginationParams.PageSize);
+
+            Response.AddPaginationHeader(new PaginationHeader(clientsDto.CurrentPage,
+                clientsDto.PageSize, clientsDto.TotalCount, clientsDto.TotalPages));
+
+            return Ok(clientsDto);
         }
+
+
+        [HttpGet("filter")]
+        public async Task<ActionResult> FindByFilter([FromQuery] ClientFilter clientFilter)
+        {
+            var clientDTO = await _clientService.FindByFilter
+            (clientFilter.Cpf, clientFilter.Name, clientFilter.City,
+                clientFilter.Neighborhood, clientFilter.PhoneNumber,
+                clientFilter.FixPhoneNumber, clientFilter.PageNumber, clientFilter.PageSize);
+
+            Response.AddPaginationHeader(new PaginationHeader(clientDTO.CurrentPage,
+                clientDTO.PageSize, clientDTO.TotalCount, clientDTO.TotalPages));
+
+            return Ok(clientDTO);
+        }
+
+        [HttpGet("search")]
+        public async Task<ActionResult> FindBySearch([FromQuery] TermSearch termSearch)
+        {
+            var clientDTO = await _clientService.FindByFilter
+                (termSearch.Term, termSearch.PageNumber, termSearch.PageSize);
+
+            Response.AddPaginationHeader(new PaginationHeader(clientDTO.CurrentPage,
+                clientDTO.PageSize, clientDTO.TotalCount, clientDTO.TotalPages));
+
+            return Ok(clientDTO);
+        }
+
 
         [HttpGet("{id}")]
         public async Task<ActionResult> FindById(int id)

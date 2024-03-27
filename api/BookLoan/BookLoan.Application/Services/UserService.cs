@@ -9,6 +9,7 @@ using BookLoan.Application.DTOs;
 using BookLoan.Application.Interfaces;
 using BookLoan.Domain.Entities;
 using BookLoan.Domain.Interfaces;
+using BookLoan.Domain.Pagination;
 
 namespace BookLoan.Application.Services
 {
@@ -24,12 +25,21 @@ namespace BookLoan.Application.Services
             _mapper = mapper;
         }
 
-        public async Task<IEnumerable<UserDTO>> FindAll()
+        public async Task<PagedList<UserDTO>> FindAll(int pageNumber, int pageSize)
         {
-            IEnumerable<User> users = await _userRepository.FindAll();
+            var users = await _userRepository.FindAll(pageNumber, pageSize);
             IEnumerable<UserDTO> userDTOs = _mapper.Map<IEnumerable<UserDTO>>(users);
-            return userDTOs;
+            return new PagedList<UserDTO>(userDTOs, pageNumber, pageSize, users.TotalCount);
 
+        }
+
+        public async Task<PagedList<UserDTO>> FindByFilter(string name, string email, bool? isAdmin, bool? isNotAdmin, bool? active, bool? inactive, int pageNumber, int pageSize)
+        {
+            var users = await _userRepository.FindAllByFilterAsync(
+                name, email, isAdmin, isNotAdmin, active, inactive, pageNumber, pageSize);
+            var usersDTO = _mapper.Map<IEnumerable<UserDTO>>(users);
+            return new PagedList<UserDTO>
+                (usersDTO, pageNumber, users.TotalPages, users.PageSize, users.TotalCount);
         }
 
         public async Task<UserDTO> FindById(int id)
@@ -58,11 +68,30 @@ namespace BookLoan.Application.Services
 
         }
 
-        public async Task<UserDTO> Update(UserDTO userDTO)
+        public async Task<UserUpdateDTO> Update(UserUpdateDTO userUpdateDTO)
         {
-            User user = _mapper.Map<User>(userDTO);
-            User userChanged = await _userRepository.Update(user);
-            return _mapper.Map<UserDTO>(userChanged);
+            var user = _mapper.Map<User>(userUpdateDTO);
+
+
+            if (userUpdateDTO.Password != null)
+            {
+                using var hmac = new HMACSHA512();
+                byte[] passwordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(userUpdateDTO.Password));
+                byte[] passwordSalt = hmac.Key;
+
+                user.ChangePassword(passwordHash, passwordSalt);
+
+            }
+
+            var updatedUser = await _userRepository.Update(user);
+            return _mapper.Map<UserUpdateDTO>(updatedUser);
+        }
+
+        public Task<bool> ExistsUserRegistered()
+        {
+
+            return _userRepository.ExistsUserRegistered();
+
         }
 
         public async Task<UserDTO> Delete(int id)

@@ -16,6 +16,7 @@ namespace BookLoan.Domain.Entities
         public bool IsAdmin { get; set; }
         public byte[] PasswordHash { get; set; } = new byte[0];
         public byte[] PasswordSalt { get; set; } = new byte[0];
+        public bool Active { get; set; }
 
         public User()
         {
@@ -43,6 +44,16 @@ namespace BookLoan.Domain.Entities
         {
             PasswordHash = passwordHash;
             PasswordSalt = passwordSalt;
+        }
+
+        public void Activeted()
+        {
+            Active = true;
+        }
+
+        public void Inactive()
+        {
+            Active = false;
         }
 
         private void ValidateDomain(string name, string email)

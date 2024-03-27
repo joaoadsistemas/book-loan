@@ -8,6 +8,7 @@ using BookLoan.Application.DTOs;
 using BookLoan.Application.Interfaces;
 using BookLoan.Domain.Entities;
 using BookLoan.Domain.Interfaces;
+using BookLoan.Domain.Pagination;
 
 namespace BookLoan.Application.Services
 {
@@ -23,11 +24,31 @@ namespace BookLoan.Application.Services
             _mapper = mapper;
         }
 
-        public async Task<IEnumerable<ClientDTO>> FindAll()
+        public async Task<PagedList<ClientDTO>> FindAll(int pageNumber, int pageSize)
         {
-            IEnumerable<Client> clients = await _clientRepository.FindAll();
-            IEnumerable<ClientDTO> clientDtos = _mapper.Map<IEnumerable<ClientDTO>>(clients);
-            return clientDtos;
+            var clients = await _clientRepository.FindAll(pageNumber, pageSize);
+            var clientDtos = _mapper.Map<IEnumerable<ClientDTO>>(clients);
+            return new PagedList<ClientDTO>(clientDtos, pageNumber, pageSize, clients.TotalCount);
+
+        }
+
+        public async Task<PagedList<ClientDTO>> FindByFilter(string cpf, string name, string city, string neighbourhood, string phoneNumber, string fixPhoneNumber,
+            int pageNumber, int pageSize)
+        {
+            var clients = await _clientRepository.FindByFilter(cpf, name, city, neighbourhood, phoneNumber, fixPhoneNumber, pageNumber, pageSize);
+
+            var clientsDTO = _mapper.Map<IEnumerable<ClientDTO>>(clients);
+
+            return new PagedList<ClientDTO>(clientsDTO, pageNumber, pageSize, clients.TotalCount);
+        }
+
+        public async Task<PagedList<ClientDTO>> FindByFilter(string term, int pageNumber, int pageSize)
+        {
+
+            var clients = await _clientRepository.FindByFilter(term, pageNumber, pageSize);
+            var clientsDTO = _mapper.Map<IEnumerable<ClientDTO>>(clients);
+
+            return new PagedList<ClientDTO>(clientsDTO, pageNumber, pageSize, clients.TotalCount);
 
         }
 

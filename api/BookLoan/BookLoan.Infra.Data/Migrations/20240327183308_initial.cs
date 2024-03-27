@@ -21,6 +21,7 @@ namespace BookLoan.Infra.Data.Migrations
                     Author = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
                     Publisher = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     YearOfPublication = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Removed = table.Column<bool>(type: "bit", nullable: false),
                     Edition = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false)
                 },
                 constraints: table =>
@@ -59,7 +60,8 @@ namespace BookLoan.Infra.Data.Migrations
                     Email = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
                     IsAdmin = table.Column<bool>(type: "bit", nullable: false),
                     PasswordHash = table.Column<byte[]>(type: "varbinary(max)", nullable: false),
-                    PasswordSalt = table.Column<byte[]>(type: "varbinary(max)", nullable: false)
+                    PasswordSalt = table.Column<byte[]>(type: "varbinary(max)", nullable: false),
+                    Active = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -73,7 +75,6 @@ namespace BookLoan.Infra.Data.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     ClientId = table.Column<int>(type: "int", nullable: false),
-                    BookId = table.Column<int>(type: "int", nullable: false),
                     LoanDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     DeliveryDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Delivered = table.Column<bool>(type: "bit", nullable: false)
@@ -82,21 +83,45 @@ namespace BookLoan.Infra.Data.Migrations
                 {
                     table.PrimaryKey("PK_Loans", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Loans_Books_BookId",
-                        column: x => x.BookId,
-                        principalTable: "Books",
-                        principalColumn: "Id");
-                    table.ForeignKey(
                         name: "FK_Loans_Clients_ClientId",
                         column: x => x.ClientId,
                         principalTable: "Clients",
                         principalColumn: "Id");
                 });
 
+            migrationBuilder.CreateTable(
+                name: "LoanBooks",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    LoanId = table.Column<int>(type: "int", nullable: false),
+                    BookId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_LoanBooks", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_LoanBooks_Books_BookId",
+                        column: x => x.BookId,
+                        principalTable: "Books",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_LoanBooks_Loans_LoanId",
+                        column: x => x.LoanId,
+                        principalTable: "Loans",
+                        principalColumn: "Id");
+                });
+
             migrationBuilder.CreateIndex(
-                name: "IX_Loans_BookId",
-                table: "Loans",
+                name: "IX_LoanBooks_BookId",
+                table: "LoanBooks",
                 column: "BookId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_LoanBooks_LoanId",
+                table: "LoanBooks",
+                column: "LoanId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Loans_ClientId",
@@ -108,13 +133,16 @@ namespace BookLoan.Infra.Data.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Loans");
+                name: "LoanBooks");
 
             migrationBuilder.DropTable(
                 name: "Users");
 
             migrationBuilder.DropTable(
                 name: "Books");
+
+            migrationBuilder.DropTable(
+                name: "Loans");
 
             migrationBuilder.DropTable(
                 name: "Clients");

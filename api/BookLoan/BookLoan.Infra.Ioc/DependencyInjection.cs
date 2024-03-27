@@ -71,6 +71,8 @@ namespace BookLoan.Infra.Ioc
             service.AddScoped<IUserRepository, UserRepository>();
             service.AddScoped<IBookRepository, BookRepository>();
             service.AddScoped<ILoanRepository, LoanRepository>();
+            service.AddScoped<ILoanBookRepository, LoanBookRepository>();
+            service.AddScoped<ISystemRepository, SystemRepository>();
             service.AddScoped<IAuthenticateRepository, AuthenticateRepository>();
 
 
@@ -80,6 +82,8 @@ namespace BookLoan.Infra.Ioc
             service.AddScoped<IUserService, UserService>();
             service.AddScoped<IBookService, BookService>();
             service.AddScoped<ILoanService, LoanService>();
+            service.AddScoped<ISystemService, SystemService>();
+            service.AddScoped<ILoanBookService, LoanBookService>();
 
             return service;
 

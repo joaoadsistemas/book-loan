@@ -15,6 +15,7 @@ namespace BookLoan.API.Context
         public DbSet<Book> Books { get; set; }
         public DbSet<Domain.Entities.Loan> Loans { get; set; }
         public DbSet<User> Users { get; set; }
+        public DbSet<LoanBook> LoanBooks { get; set; }
 
 
 

@@ -16,7 +16,6 @@ namespace BookLoan.Infra.Data.EntitiesConfiguration
 
             builder.HasKey(bl => bl.Id);
             builder.Property(bl => bl.ClientId).IsRequired();
-            builder.Property(bl => bl.BookId).IsRequired();
             builder.Property(bl => bl.DeliveryDate).IsRequired();
             builder.Property(bl => bl.Delivered).IsRequired();
             builder.Property(bl => bl.LoanDate).IsRequired();
@@ -25,10 +24,6 @@ namespace BookLoan.Infra.Data.EntitiesConfiguration
             builder.HasOne(bl => bl.Client)
                 .WithMany(c => c.Loan)
                 .HasForeignKey(bl => bl.ClientId).OnDelete(DeleteBehavior.NoAction);
-
-            builder.HasOne(bl => bl.Book)
-                .WithMany(b => b.Loan)
-                .HasForeignKey(bl => bl.BookId).OnDelete(DeleteBehavior.NoAction);
 
         }
     }

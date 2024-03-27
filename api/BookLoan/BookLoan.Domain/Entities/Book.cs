@@ -11,9 +11,12 @@ namespace BookLoan.Domain.Entities
         public string Author { get; set; }
         public string Publisher { get; set; }
         public DateTime YearOfPublication { get; set; }
+        public bool Removed { get; private set; }
         public string Edition { get; set; }
 
-        public ICollection<Loan> Loan { get; set; }
+
+        public ICollection<LoanBook> LoanBooks { get; set; }
+
 
 
 
@@ -36,6 +39,11 @@ namespace BookLoan.Domain.Entities
         public void Update(string name, string author, string publisher, DateTime yearOfPublication, string edition)
         {
             ValidateDomain(name, author, publisher, yearOfPublication, edition);
+        }
+
+        public void Remove()
+        {
+            Removed = true;
         }
 
         public void ValidateDomain(string name, string author, string publisher, DateTime yearOfPublication, string edition)

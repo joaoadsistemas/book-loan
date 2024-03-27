@@ -1,11 +1,15 @@
-﻿using BookLoan.Application.DTOs;
+﻿using BookLoan.API.Extensions;
+using BookLoan.API.Models;
+using BookLoan.Application.DTOs;
 using BookLoan.Application.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LoanLoan.API.Controllers
 {
     [Route("api/[controller]")]
+    [Authorize]
     [ApiController]
     public class LoanController : ControllerBase
     {
@@ -19,9 +23,30 @@ namespace LoanLoan.API.Controllers
 
 
         [HttpGet]
-        public async Task<ActionResult> FindAll()
+        public async Task<ActionResult> FindAll([FromQuery] PaginationParams paginationParams)
         {
-            return Ok(await _loanService.FindAll());
+            var loanDTO = await _loanService.FindAll(paginationParams.PageNumber, paginationParams.PageSize);
+
+            Response.AddPaginationHeader(new PaginationHeader(paginationParams.PageNumber, 
+                paginationParams.PageSize, loanDTO.TotalCount, loanDTO.TotalPages));
+
+            return Ok(loanDTO);
+        }
+
+
+        [HttpGet("filter")]
+        public async Task<ActionResult> FindByFilter([FromQuery] LoanFilter loanFilter)
+        {
+            var loanDTO = await _loanService.FindByFilter
+            (loanFilter.Cpf, loanFilter.Name,
+                loanFilter.LoanDateInitial, loanFilter.LoanDateFinal,
+                loanFilter.DeliverDateInitial, loanFilter.DeliverDateFinal,
+                loanFilter.Delivered, loanFilter.NotDelivered, loanFilter.PageNumber, loanFilter.PageSize);
+
+            Response.AddPaginationHeader(new PaginationHeader(loanFilter.PageNumber,
+                loanFilter.PageSize, loanDTO.TotalCount, loanDTO.TotalPages));
+
+            return Ok(loanDTO);
         }
 
         [HttpGet("{id}")]
@@ -40,6 +65,14 @@ namespace LoanLoan.API.Controllers
         [HttpPost]
         public async Task<ActionResult> Insert([FromBody] LoanInsertDTO loanInsertDto)
         {
+
+            var available = await _loanService.VerifyAvailable(loanInsertDto.BookId);
+
+            if (!available)
+            {
+                return BadRequest("The book is not available for loan");
+            }
+
             loanInsertDto.LoanDate = DateTime.Now;
             loanInsertDto.Delivered = false;
             LoanDTO loan = await _loanService.Insert(loanInsertDto);

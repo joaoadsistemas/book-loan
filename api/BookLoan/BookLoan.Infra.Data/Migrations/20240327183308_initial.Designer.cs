@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BookLoan.Infra.Data.Migrations
 {
     [DbContext(typeof(SystemDbContext))]
-    [Migration("20240326231914_initial")]
+    [Migration("20240327183308_initial")]
     partial class initial
     {
         /// <inheritdoc />
@@ -52,6 +52,9 @@ namespace BookLoan.Infra.Data.Migrations
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
+
+                    b.Property<bool>("Removed")
+                        .HasColumnType("bit");
 
                     b.Property<DateTime>("YearOfPublication")
                         .HasColumnType("datetime2");
@@ -125,9 +128,6 @@ namespace BookLoan.Infra.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("BookId")
-                        .HasColumnType("int");
-
                     b.Property<int>("ClientId")
                         .HasColumnType("int");
 
@@ -142,11 +142,32 @@ namespace BookLoan.Infra.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("BookId");
-
                     b.HasIndex("ClientId");
 
                     b.ToTable("Loans");
+                });
+
+            modelBuilder.Entity("BookLoan.Domain.Entities.LoanBook", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("BookId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("LoanId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BookId");
+
+                    b.HasIndex("LoanId");
+
+                    b.ToTable("LoanBooks");
                 });
 
             modelBuilder.Entity("BookLoan.Domain.Entities.User", b =>
@@ -156,6 +177,9 @@ namespace BookLoan.Infra.Data.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("Active")
+                        .HasColumnType("bit");
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -185,31 +209,47 @@ namespace BookLoan.Infra.Data.Migrations
 
             modelBuilder.Entity("BookLoan.Domain.Entities.Loan", b =>
                 {
-                    b.HasOne("BookLoan.Domain.Entities.Book", "Book")
-                        .WithMany("Loan")
-                        .HasForeignKey("BookId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
                     b.HasOne("BookLoan.Domain.Entities.Client", "Client")
                         .WithMany("Loan")
                         .HasForeignKey("ClientId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
+                    b.Navigation("Client");
+                });
+
+            modelBuilder.Entity("BookLoan.Domain.Entities.LoanBook", b =>
+                {
+                    b.HasOne("BookLoan.Domain.Entities.Book", "Book")
+                        .WithMany("LoanBooks")
+                        .HasForeignKey("BookId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("BookLoan.Domain.Entities.Loan", "Loan")
+                        .WithMany("LoanBooks")
+                        .HasForeignKey("LoanId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
                     b.Navigation("Book");
 
-                    b.Navigation("Client");
+                    b.Navigation("Loan");
                 });
 
             modelBuilder.Entity("BookLoan.Domain.Entities.Book", b =>
                 {
-                    b.Navigation("Loan");
+                    b.Navigation("LoanBooks");
                 });
 
             modelBuilder.Entity("BookLoan.Domain.Entities.Client", b =>
                 {
                     b.Navigation("Loan");
+                });
+
+            modelBuilder.Entity("BookLoan.Domain.Entities.Loan", b =>
+                {
+                    b.Navigation("LoanBooks");
                 });
 #pragma warning restore 612, 618
         }
