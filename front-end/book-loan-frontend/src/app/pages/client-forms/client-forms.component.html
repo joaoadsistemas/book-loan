@@ -1,0 +1,226 @@
+<div class="container mt-5">
+  <h2>{{ client ? "Update" : "Insert" }} New Client</h2>
+  <hr />
+  <form [formGroup]="clientForm">
+    <div class="row g-3">
+      <div class="col-md-4">
+        <label for="cpf" class="form-label">CPF</label>
+        <input
+          type="text"
+          id="cpf"
+          class="form-control"
+          placeholder="Input CPF"
+          formControlName="cpf"
+          [class.is-invalid]="
+            clientForm.get('cpf')?.errors && clientForm.get('cpf')?.touched
+          "
+        />
+        <div
+          *ngIf="clientForm.get('cpf')?.hasError('required')"
+          class="invalid-feedback"
+        >
+          Cpf is required
+        </div>
+        <div
+          *ngIf="clientForm.get('cpf')?.hasError('minlenght')"
+          class="invalid-feedback"
+        >
+          Cpf must be 11 characters
+        </div>
+        <div
+          *ngIf="clientForm.get('cpf')?.hasError('maxlength')"
+          class="invalid-feedback"
+        >
+          Cpf must be 11 characters
+        </div>
+      </div>
+      <div class="col-md-8">
+        <label for="name" class="form-label">Name</label>
+        <input
+          type="text"
+          id="name"
+          class="form-control"
+          placeholder="Input Name"
+          formControlName="name"
+          [class.is-invalid]="
+            clientForm.get('name')?.errors && clientForm.get('name')?.touched
+          "
+        />
+        <div
+          *ngIf="clientForm.get('name')?.hasError('required')"
+          class="invalid-feedback"
+        >
+          Name is required
+        </div>
+        <div
+          *ngIf="clientForm.get('name')?.hasError('maxlength')"
+          class="invalid-feedback"
+        >
+          Name must be 200 characters
+        </div>
+      </div>
+      <div class="col-md-6">
+        <label for="address" class="form-label">Address</label>
+        <input
+          type="text"
+          id="address"
+          class="form-control"
+          placeholder="Input Address"
+          formControlName="address"
+          [class.is-invalid]="
+            clientForm.get('address')?.errors &&
+            clientForm.get('address')?.touched
+          "
+        />
+        <div
+          *ngIf="clientForm.get('address')?.hasError('required')"
+          class="invalid-feedback"
+        >
+          Address is required
+        </div>
+        <div
+          *ngIf="clientForm.get('address')?.hasError('maxlength')"
+          class="invalid-feedback"
+        >
+          Address must be 50 characters
+        </div>
+      </div>
+      <div class="col-md-2">
+        <label for="number" class="form-label">Number</label>
+        <input
+          type="text"
+          id="number"
+          class="form-control"
+          placeholder="Input Number"
+          formControlName="number"
+          [class.is-invalid]="
+            clientForm.get('number')?.errors &&
+            clientForm.get('number')?.touched
+          "
+        />
+        <div
+          *ngIf="clientForm.get('number')?.hasError('required')"
+          class="invalid-feedback"
+        >
+          Number is required
+        </div>
+        <div
+          *ngIf="clientForm.get('number')?.hasError('maxlength')"
+          class="invalid-feedback"
+        >
+          Number must be 50 characters
+        </div>
+      </div>
+      <div class="col-md-4">
+        <label for="city" class="form-label">City</label>
+        <input
+          type="text"
+          id="city"
+          class="form-control"
+          placeholder="Name of City"
+          formControlName="city"
+          [class.is-invalid]="
+            clientForm.get('city')?.errors && clientForm.get('city')?.touched
+          "
+        />
+        <div
+          *ngIf="clientForm.get('city')?.hasError('required')"
+          class="invalid-feedback"
+        >
+          City is required
+        </div>
+        <div
+          *ngIf="clientForm.get('city')?.hasError('maxlength')"
+          class="invalid-feedback"
+        >
+          City must be 50 characters
+        </div>
+      </div>
+      <div class="col-md-4">
+        <label for="neighborhood" class="form-label">Neighbourhood</label>
+        <input
+          type="text"
+          id="neighborhood"
+          class="form-control"
+          placeholder="Name of Neighborhood"
+          formControlName="neighborhood"
+          [class.is-invalid]="
+            clientForm.get('neighborhood')?.errors &&
+            clientForm.get('neighborhood')?.touched
+          "
+        />
+        <div
+          *ngIf="clientForm.get('neighborhood')?.hasError('required')"
+          class="invalid-feedback"
+        >
+          Neighborhood is required
+        </div>
+        <div
+          *ngIf="clientForm.get('neighborhood')?.hasError('maxlength')"
+          class="invalid-feedback"
+        >
+          Neighborhood must be 50 characters
+        </div>
+      </div>
+      <div class="col-md-4">
+        <label for="fixPhoneNumber" class="form-label">Fix Phone-Number</label>
+        <input
+          type="text"
+          id="fixPhoneNumber"
+          class="form-control"
+          placeholder="Input Fix Phone-Number"
+          formControlName="fixPhoneNumber"
+          [class.is-invalid]="
+            clientForm.get('fixPhoneNumber')?.errors &&
+            clientForm.get('fixPhoneNumber')?.touched
+          "
+        />
+        <div
+          *ngIf="clientForm.get('fixPhoneNumber')?.hasError('required')"
+          class="invalid-feedback"
+        >
+          Fix Phone-Number is required
+        </div>
+        <div
+          *ngIf="clientForm.get('fixPhoneNumber')?.hasError('maxlength')"
+          class="invalid-feedback"
+        >
+          Fix Phone-Number must be 10 characters
+        </div>
+      </div>
+      <div class="col-md-4">
+        <label for="phoneNumber" class="form-label">Phone-Number</label>
+        <input
+          type="text"
+          id="phoneNumber"
+          class="form-control"
+          placeholder="Input Phone-Number"
+          formControlName="phoneNumber"
+          [class.is-invalid]="
+            clientForm.get('phoneNumber')?.errors &&
+            clientForm.get('phoneNumber')?.touched
+          "
+        />
+        <div
+          *ngIf="clientForm.get('phoneNumber')?.hasError('required')"
+          class="invalid-feedback"
+        >
+          Phone-Number is required
+        </div>
+        <div
+          *ngIf="clientForm.get('phoneNumber')?.hasError('maxlength')"
+          class="invalid-feedback"
+        >
+          Phone-Number must be 10 characters
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12 mt-3 text-end">
+        <button (click)=" client ? updateClient() : insertClient()" [disabled]="!clientForm.valid" class="btn btn-success">
+          {{ client ? "Update" : "Insert" }}
+        </button>
+      </div>
+    </div>
+  </form>
+</div>

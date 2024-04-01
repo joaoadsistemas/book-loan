@@ -133,7 +133,9 @@ namespace BookLoan.API.Controllers
             var token = _authenticateRepository.GenerateToken(user.Id, user.Email);
             var userToken = new UserToken()
             {
-                Token = token
+                Token = token,
+                Email = userDto.Email,
+                IsAdmin = userDto.IsAdmin
             };
 
             return Ok(userToken);

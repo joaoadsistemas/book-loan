@@ -1,0 +1,118 @@
+<div class="container mt-5">
+  <h2>{{ user ? "Update" : "Insert" }} New User</h2>
+  <hr />
+  <form [formGroup]="userForms">
+    <div class="row g-3">
+      <div class="col-md-8">
+        <label for="name" class="form-label">Name</label>
+        <input
+          [class.is-invalid]="
+            userForms.get('name')?.errors && userForms.get('name')?.touched
+          "
+          type="text"
+          id="name"
+          class="form-control"
+          placeholder="Input Name"
+          formControlName="name"
+        />
+        <div
+          *ngIf="userForms.get('name')?.hasError('required')"
+          class="invalid-feedback"
+        >
+          Name is required
+        </div>
+        <div
+          *ngIf="userForms.get('name')?.hasError('maxlength')"
+          class="invalid-feedback"
+        >
+          Name must be at most 250 characters
+        </div>
+      </div>
+      <div class="col-md-4">
+        <label for="email" class="form-label">E-mail</label>
+        <input
+          [class.is-invalid]="
+            userForms.get('email')?.errors && userForms.get('email')?.touched
+          "
+          type="email"
+          id="email"
+          class="form-control"
+          placeholder="Input Email"
+          formControlName="email"
+        />
+        <div
+          *ngIf="userForms.get('email')?.hasError('required')"
+          class="invalid-feedback"
+        >
+          Email is required
+        </div>
+        <div
+          *ngIf="userForms.get('email')?.hasError('maxlength')"
+          class="invalid-feedback"
+        >
+          Email must be at most 250 characters
+        </div>
+        <div
+          *ngIf="userForms.get('email')?.hasError('email')"
+          class="invalid-feedback"
+        >
+          Email is invalid
+        </div>
+      </div>
+      <div class="col-md-5">
+        <label for="password" class="form-label">Default Password</label>
+        <input
+          [class.is-invalid]="
+            userForms.get('password')?.errors &&
+            userForms.get('password')?.touched
+          "
+          type="password"
+          id="password"
+          class="form-control"
+          placeholder="Input the user's temporary password"
+          formControlName="password"
+        />
+        <div
+          *ngIf="userForms.get('password')?.hasError('required')"
+          class="invalid-feedback"
+        >
+          Password is required
+        </div>
+        <div
+          *ngIf="userForms.get('password')?.hasError('maxlength')"
+          class="invalid-feedback"
+        >
+          Password must be at most 100 characters
+        </div>
+        <div
+          *ngIf="userForms.get('password')?.hasError('minlength')"
+          class="invalid-feedback"
+        >
+          Password must be at least 8 characters
+        </div>
+      </div>
+      <div class="col-md-4 d-flex flex-column justify-content-end">
+        <div class="form-check">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            id="isAdmin"
+            formControlName="isAdmin"
+          />
+          <label for="isAdmin" class="form-check-label"> Admin </label>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12 mt-3 text-end">
+        <button
+          [disabled]="!userForms.valid"
+          (click)="user ? updateUser() : register()"
+          class="btn btn-success"
+        >
+          {{ user ? "Update" : "Insert" }}
+        </button>
+      </div>
+    </div>
+  </form>
+</div>

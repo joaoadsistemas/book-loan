@@ -1,0 +1,51 @@
+<div class="container mt-5">
+  <h2>Users</h2>
+  <hr />
+  <button class="btn btn-sm btn-primary" routerLink="/user/create">
+    <i class="fa fa-plus"></i> New User
+  </button>
+  <div class="table-responsive">
+    <table class="table">
+      <thead>
+        <tr>
+          <th></th>
+          <th>Name</th>
+          <th>Email</th>
+          <th>IsAdmin</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let user of users">
+          <td>
+            <button (click)="updateUser(user)" class="btn btn-sm btn-primary">
+              <i class="fa fa-search"></i>
+            </button>
+          </td>
+          <td>
+            {{ user.name }}
+          </td>
+          <td>
+            {{ user.email }}
+          </td>
+          <td>
+            {{ user.isAdmin ? "Yes" : "No" }}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="d-flex justify-content-center">
+    <pagination
+      [boundaryLinks]="true"
+      [totalItems]="pagination?.totalItems!"
+      [itemsPerPage]="pagination?.itemsPerPage!"
+      [maxSize]="10"
+      (pageChanged)="pageChanged($event)"
+      previousText="&lsaquo;"
+      nextText="&rsaquo;"
+      firstText="&laquo;"
+      lastText="&raquo;"
+    >
+    </pagination>
+  </div>
+</div>

@@ -75,7 +75,7 @@ namespace BookLoan.Application.Services
 
             if (userUpdateDTO.Password != null)
             {
-                using var hmac = new HMACSHA512();
+                using var hmac = new HMACSHA256();
                 byte[] passwordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(userUpdateDTO.Password));
                 byte[] passwordSalt = hmac.Key;
 

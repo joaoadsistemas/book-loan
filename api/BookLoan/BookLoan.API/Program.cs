@@ -41,6 +41,14 @@ namespace BookLoan.API
 
             app.UseHttpsRedirection();
 
+
+            app.UseCors(builder =>
+            {
+                builder.WithOrigins("https://localhost:7235", "http://localhost:4200")
+                    .AllowAnyHeader()
+                    .AllowAnyMethod();
+            });
+
             app.UseAuthentication();
             app.UseAuthorization();
 

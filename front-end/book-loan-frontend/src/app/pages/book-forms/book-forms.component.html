@@ -1,0 +1,142 @@
+<div class="container mt-5">
+  <h2> {{book ? 'Update Book' : 'New Book'}} </h2>
+  <hr />
+  <form [formGroup]="bookForm">
+    <div class="row g-3">
+      <div class="col-md-4">
+        <label for="name" class="form-label">Name</label>
+        <input
+          type="text"
+          id="name"
+          class="form-control"
+          placeholder="Input Book Name"
+          formControlName="name"
+          [class.is-invalid]="
+            bookForm.get('name')?.errors && bookForm.get('name')?.touched
+          "
+        />
+        <div
+          *ngIf="bookForm.get('name')?.hasError('required')"
+          class="invalid-feedback"
+        >
+          Name is required
+        </div>
+        <div
+          *ngIf="bookForm.get('name')?.hasError('maxlength')"
+          class="invalid-feedback"
+        >
+          Name must be at most 50 characters
+        </div>
+      </div>
+      <div class="col-md-8">
+        <label for="author" class="form-label">Author</label>
+        <input
+          type="text"
+          id="author"
+          class="form-control"
+          placeholder="Input Book Author"
+          formControlName="author"
+          [class.is-invalid]="
+            bookForm.get('author')?.errors && bookForm.get('author')?.touched
+          "
+        />
+        <div
+          *ngIf="bookForm.get('author')?.hasError('required')"
+          class="invalid-feedback"
+        >
+          Author is required
+        </div>
+        <div
+          *ngIf="bookForm.get('author')?.hasError('maxlength')"
+          class="invalid-feedback"
+        >
+          Author must be at most 200 characters
+        </div>
+      </div>
+      <div class="col-md-6">
+        <label for="publisher" class="form-label">Publisher</label>
+        <input
+          type="text"
+          id="publisher"
+          class="form-control"
+          placeholder="Input Publisher"
+          formControlName="publisher"
+          [class.is-invalid]="
+            bookForm.get('publisher')?.errors &&
+            bookForm.get('publisher')?.touched
+          "
+        />
+        <div
+          *ngIf="bookForm.get('publisher')?.hasError('required')"
+          class="invalid-feedback"
+        >
+          Publisher is required
+        </div>
+        <div
+          *ngIf="bookForm.get('publisher')?.hasError('maxlength')"
+          class="invalid-feedback"
+        >
+          Publisher must be at most 50 characters
+        </div>
+      </div>
+      <div class="col-md-4">
+        <label for="yearOfPublication" class="form-label"
+          >Year of Publication</label
+        >
+        <input
+          type="date"
+          id="yearOfPublication"
+          class="form-control"
+          placeholder="Input Year of Publication"
+          formControlName="yearOfPublication"
+          [class.is-invalid]="
+            bookForm.get('yearOfPublication')?.errors &&
+            bookForm.get('yearOfPublication')?.touched
+          "
+        />
+        <div
+          *ngIf="bookForm.get('yearOfPublication')?.hasError('required')"
+          class="invalid-feedback"
+        >
+          Year of publication is required
+        </div>
+      </div>
+      <div class="col-md-2">
+        <label for="edition" class="form-label">Edition</label>
+        <input
+          type="text"
+          id="edition"
+          class="form-control"
+          placeholder="Edition"
+          formControlName="edition"
+          [class.is-invalid]="
+            bookForm.get('edition')?.errors && bookForm.get('edition')?.touched
+          "
+        />
+        <div
+          *ngIf="bookForm.get('edition')?.hasError('required')"
+          class="invalid-feedback"
+        >
+          Edition is required
+        </div>
+        <div
+          *ngIf="bookForm.get('edition')?.hasError('maxlength')"
+          class="invalid-feedback"
+        >
+          Edition must be at most 50 characters
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12 mt-3 text-end">
+        <button
+          (click)=" book ? updateBook() : insertBook()"
+          [disabled]="!bookForm.valid"
+          class="btn btn-success"
+        >
+          {{ book ? 'Update' : 'Register' }}
+        </button>
+      </div>
+    </div>
+  </form>
+</div>

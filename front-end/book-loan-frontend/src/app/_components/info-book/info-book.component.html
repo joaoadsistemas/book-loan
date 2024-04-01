@@ -1,0 +1,13 @@
+<div class="card mb-2">
+  <div class="card-body">
+    <h5> {{book?.name}} </h5>
+    <p><b>Author: </b> {{book?.author}} <br>
+      <b>Publisher: </b> {{book?.publisher}} <br>
+      <b>Edition: </b> {{book?.edition}} <br>
+      <b>Year of Publication: </b> {{book?.yearOfPublication}} </p>
+      <div class="text-end">
+        <button *ngIf="showThrash" class="btn btn-danger"> <i class="fa fa-trash"></i></button>
+        <button *ngIf="showAdd" class="btn btn-success"> <i class="fa fa-plus"></i></button>
+      </div>
+  </div>
+</div>

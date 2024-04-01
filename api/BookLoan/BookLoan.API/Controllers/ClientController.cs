@@ -29,7 +29,7 @@ namespace BookLoan.API.Controllers
 
 
         [HttpGet]
-        public async Task<ActionResult> FindAll(PaginationParams paginationParams)
+        public async Task<ActionResult> FindAll([FromQuery] PaginationParams paginationParams)
         {
             var clientsDto = await _clientService.FindAll(paginationParams.PageNumber, paginationParams.PageSize);
 

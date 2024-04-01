@@ -27,7 +27,6 @@ namespace BookLoan.Infra.Ioc
 
         public static IServiceCollection AddInfrastructure(this IServiceCollection service, IConfiguration configuration)
         {
-
             // DATABASE
             service.AddDbContext<SystemDbContext>(options =>
             {

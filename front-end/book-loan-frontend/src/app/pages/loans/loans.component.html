@@ -1,0 +1,29 @@
+<div class="container mt-5">
+  <h2>Loan</h2>
+  <hr>
+  <div class="row mt-4">
+    <div class="col-md-6 mb-4">
+      <h4>Select Client</h4>
+      <div class="input-group mb-3">
+        <input type="text" class="form-control" placeholder="Search client" [(ngModel)]="clientInfo"/>
+        <button class="btn btn-outline-secondary" type="button" (click)="openClientDetails()"> <i class="fa fa-search"></i></button>
+      </div>
+      <app-info-client *ngFor="let client of clients" [client]="client" [showThrash]="true"></app-info-client>
+    </div>
+    <div class="col-md-6 mb-4">
+      <h4>Select Books</h4>
+      <div class="input-group mb-3">
+        <input type="text" class="form-control" placeholder="Search book" [(ngModel)]="bookInfo"/>
+        <button class="btn btn-outline-secondary" type="button" (click)="openBookDetails()"> <i class="fa fa-search"></i></button>
+      </div>
+      <div class="scrollable">
+        <app-info-book *ngFor="let book of books" [book]="book" [showThrash]="true"></app-info-book>
+    </div>
+  </div>
+</div>
+<div class="row mt-4 mb-4">
+  <div class="col-12">
+    <button class="btn btn-success me-2">Confirm loan</button>
+    <button class="btn btn-secondary">Cancel</button>
+  </div>
+</div>

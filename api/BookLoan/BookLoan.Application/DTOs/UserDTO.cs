@@ -27,7 +27,6 @@ namespace BookLoan.Application.DTOs
         [MinLength(8)]
         public string Password { get; set; }
 
-        [JsonIgnore]
         public bool IsAdmin { get; set; }
 
     }

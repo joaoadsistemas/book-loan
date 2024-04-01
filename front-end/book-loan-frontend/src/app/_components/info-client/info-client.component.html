@@ -1,0 +1,12 @@
+<div class="card mb-2">
+  <div class="card-body">
+    <h5> {{client?.name}} </h5>
+    <p><b>CPF: </b> {{client?.cpf}} <br>
+      <b>Address: </b> {{client?.address}}, neighborhood: {{client?.neighborhood}}, number:  {{client?.number}}, city: {{client?.city}} <br>
+      <b>Contact: </b> {{client?.phoneNumber}} | {{client?.fixPhoneNumber}}</p>
+      <div class="text-end">
+        <button *ngIf="showThrash" class="btn btn-danger"> <i class="fa fa-trash"></i></button>
+        <button *ngIf="showAdd" class="btn btn-success"> <i class="fa fa-plus"></i></button>
+      </div>
+  </div>
+</div>

@@ -31,14 +31,17 @@ namespace BookLoan.Infra.Data.Identity
 
         public async Task<bool> AuthenticateAsync(string email, string password)
         {
-            User user = await _dbContext.Users.Where(u => u.Email.ToLower().Equals(email.ToLower()))
-                            .FirstOrDefaultAsync()
-                        ?? throw new ArgumentException("This user does not exists");
+            var user = await _dbContext.Users.Where(x => x.Email.ToLower() == email.ToLower()).FirstOrDefaultAsync();
+            if (user == null)
+            {
+                return false;
+            }
+
             using var hmac = new HMACSHA256(user.PasswordSalt);
             var computedHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
-            for (int i = 0; i < computedHash.Length; i++)
+            for (int x = 0; x < computedHash.Length; x++)
             {
-                if (computedHash[i] != user.PasswordHash[i]) return false;
+                if (computedHash[x] != user.PasswordHash[x]) return false;
             }
 
             return true;
@@ -65,7 +68,7 @@ namespace BookLoan.Infra.Data.Identity
 
             var credentials = new SigningCredentials(privateKey, SecurityAlgorithms.HmacSha256);
 
-            var expiration = DateTime.UtcNow.AddMinutes(10);
+            var expiration = DateTime.UtcNow.AddDays(1);
 
             JwtSecurityToken token = new JwtSecurityToken(
                 issuer: _configuration["JWT:ValidIssuer"],
