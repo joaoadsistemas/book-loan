@@ -28,6 +28,8 @@ import {
 } from '@angular/common/http';
 import { JwtInterceptor } from './_interceptors/jwt.interceptor';
 import { AuthorizationMessageComponent } from './pages/authorization-message/authorization-message.component';
+import { LoadingInterceptor } from './_interceptors/loading.interceptor';
+import { ErrorInterceptor } from './_interceptors/error.interceptor';
 
 @NgModule({
   declarations: [
@@ -60,6 +62,8 @@ import { AuthorizationMessageComponent } from './pages/authorization-message/aut
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: LoadingInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
   ],
   bootstrap: [AppComponent],
 })

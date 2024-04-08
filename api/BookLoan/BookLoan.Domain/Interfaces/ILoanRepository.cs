@@ -13,7 +13,7 @@ namespace Loan.Domain.Interfaces
         Task<BookLoan.Domain.Entities.Loan> FindById(int id);
         Task<BookLoan.Domain.Entities.Loan> Insert(BookLoan.Domain.Entities.Loan loan);
         Task<BookLoan.Domain.Entities.Loan> Update(BookLoan.Domain.Entities.Loan loan);
-        Task<bool> VerifyAvailable(int id);
+        Task<bool> VerifyAvailable(int[] idBooks);
         Task<BookLoan.Domain.Entities.Loan> Delete(int id);
         Task<bool> SaveAllAsync();
 

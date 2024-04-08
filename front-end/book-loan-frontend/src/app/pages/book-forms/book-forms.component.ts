@@ -58,10 +58,6 @@ export class BookFormsComponent implements OnInit {
           this.toastr.success('Book has been registered successfully');
           this.bookForm.reset();
         },
-        error: (response: any) => {
-          this.toastr.error(response.error);
-          console.log(response);
-        },
       });
     }
   }
@@ -72,11 +68,7 @@ export class BookFormsComponent implements OnInit {
         next: (response: any) => {
           this.toastr.success('Book has been Updated successfully');
           this.router.navigate(['/book'])
-        },
-        error: (response: any) => {
-          this.toastr.error(response.error);
-          console.log(response);
-        },
+        }
       });
     }
   }

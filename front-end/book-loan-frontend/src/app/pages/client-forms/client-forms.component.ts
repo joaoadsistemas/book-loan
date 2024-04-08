@@ -1,7 +1,7 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
 import { IClient } from '../../_models/IClient';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
 import { ClientService } from '../../_services/client.service';
 import { ToastrService } from 'ngx-toastr';
 
@@ -59,25 +59,19 @@ export class ClientFormsComponent implements OnInit {
 
   insertClient() {
     this.clientService.insertClient(this.clientForm.value).subscribe({
-      next: (response) => {
+      next: (response: any) => {
         this.toastr.success('Client has been registered successfully')
         this.clientForm.reset()
       },
-      error: (response) => {
-        this.toastr.error(response.error)
-      }
     });
   }
 
   updateClient() {
     this.clientService.updateClient(this.clientForm.value).subscribe({
-      next: (response) => {
+      next: (response: any) => {
         this.toastr.success('Client has been updated successfully')
         this.router.navigate(['/client'])
       },
-      error: (response) => {
-        this.toastr.error(response.error)
-      }
     });
   }
 

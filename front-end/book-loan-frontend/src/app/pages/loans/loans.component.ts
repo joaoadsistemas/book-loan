@@ -1,3 +1,4 @@
+import { ClientService } from './../../_services/client.service';
 import { Component } from '@angular/core';
 import { IBook } from '../../_models/IBook';
 import { BsModalRef, BsModalService, ModalOptions } from 'ngx-bootstrap/modal'; // Import ModalOptions
@@ -11,52 +12,18 @@ import { BookDetailsComponent } from '../../_modals/book-details/book-details.co
   styleUrls: ['./loans.component.css'],
 })
 export class LoansComponent {
-  books: Array<IBook> = [
-    {
-      id: 1,
-      author: 'Stephen King',
-      edition: '1',
-      name: 'It',
-      publisher: 'Suma',
-      yearOfPublication: new Date(2014, 5, 1),
-    },
-    {
-      id: 1,
-      author: 'Stephen King',
-      edition: '1',
-      name: 'It',
-      publisher: 'Suma',
-      yearOfPublication: new Date(2014, 5, 1),
-    },
-    {
-      id: 1,
-      author: 'Stephen King',
-      edition: '1',
-      name: 'It',
-      publisher: 'Suma',
-      yearOfPublication: new Date(2014, 5, 1),
-    },
-  ];
+  books: Array<IBook> = [];
 
-  clients: Array<IClient> = [
-    {
-      name: 'Joao',
-      address: 'Rua Achiles Audi',
-      city: 'Cerquilho',
-      cpf: '51409677826',
-      fixPhoneNumber: '33856787',
-      id: 1,
-      neighborhood: 'Centro',
-      number: '1043',
-      phoneNumber: '15991564371',
-    },
-  ];
+  client?: IClient;
 
   bsModalRef?: BsModalRef;
   clientInfo: string = '';
   bookInfo: string = '';
 
-  constructor(private modalService: BsModalService) {}
+  constructor(
+    private modalService: BsModalService,
+    private clientService: ClientService
+  ) {}
 
   openClientDetails() {
     const modalOptions: ModalOptions<ClientDetailsComponent> = {
@@ -69,6 +36,14 @@ export class LoansComponent {
       ClientDetailsComponent,
       modalOptions
     );
+
+    this.bsModalRef?.content.onClose.subscribe((result: IClient) => {
+      this.client = result
+    });
+  }
+
+  removeClient() {
+    this.client = undefined;
   }
 
   openBookDetails() {
@@ -82,5 +57,9 @@ export class LoansComponent {
       BookDetailsComponent,
       modalOptions
     );
+
+    this.bsModalRef.content.onClose.subscribe((result: IBook) => {
+      this.books.push(result);
+    });
   }
 }

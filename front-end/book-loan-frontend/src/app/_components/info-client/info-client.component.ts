@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { IClient } from '../../_models/IClient';
 
 @Component({
@@ -10,4 +10,12 @@ export class InfoClientComponent {
   @Input() client?: IClient;
   @Input() showThrash: boolean = false;
   @Input() showAdd: boolean = false;
+
+  @Output() clickButton = new EventEmitter<void>();
+
+
+  addOrRemove() {
+    this.clickButton.emit();
+  }
+
 }

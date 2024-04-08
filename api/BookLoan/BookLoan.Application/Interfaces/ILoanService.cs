@@ -18,7 +18,7 @@ namespace BookLoan.Application.Interfaces
         Task<LoanDTO> FindById(int id);
         Task<LoanDTO> Insert(LoanInsertDTO loanInsertDto);
         Task<LoanDTO> Update(LoanDTO loanInsertDto);
-        Task<bool> VerifyAvailable(int id); 
+        Task<bool> VerifyAvailable(int[] idsBooks); 
         Task<LoanDTO> Delete(int id);
 
     }

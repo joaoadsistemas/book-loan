@@ -52,7 +52,7 @@ namespace BookLoan.API.Controllers
 
             if (!userLogged.IsAdmin)
             {
-                return Unauthorized("Você não tem permissão para consultar os usuários do sistema.");
+                return Unauthorized("You dont have permission for search system users.");
             }
 
             var users = await _userService.FindByFilter(userFilter.Name, userFilter.Email,
@@ -194,7 +194,7 @@ namespace BookLoan.API.Controllers
             }
             var usuario = await _userService.Update(userUpdatetDTO);
 
-            return Ok(new { message = "User updated successfully!" });
+            return Ok( "User updated successfully!");
         }
 
         [HttpDelete("{id}")]

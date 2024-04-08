@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { IBook } from '../../_models/IBook';
 
 @Component({
@@ -10,4 +10,9 @@ export class InfoBookComponent {
   @Input() book?: IBook;
   @Input() showThrash: boolean = false;
   @Input() showAdd: boolean = false;
+  @Output() clickButton = new EventEmitter<void>();
+
+  addOrRemove() {
+    this.clickButton.emit();
+  }
 }

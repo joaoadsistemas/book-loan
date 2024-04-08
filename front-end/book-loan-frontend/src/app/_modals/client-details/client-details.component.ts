@@ -1,5 +1,5 @@
 import { BsModalRef } from 'ngx-bootstrap/modal';
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit } from '@angular/core';
 import { IClient } from '../../_models/IClient';
 
 @Component({
@@ -9,28 +9,29 @@ import { IClient } from '../../_models/IClient';
 })
 export class ClientDetailsComponent implements OnInit {
   clientInfo: string = '';
+  onClose: EventEmitter<any> = new EventEmitter();
   clients: Array<IClient> = [
     {
-      name: 'Joao',
-      address: 'Rua Achiles Audi',
-      city: 'Cerquilho',
-      cpf: '51409677826',
-      fixPhoneNumber: '33856787',
       id: 1,
+      cpf: '51409776543',
+      name: 'Luan',
+      address: 'Rua Limeira',
+      city: 'Santos',
       neighborhood: 'Centro',
-      number: '1043',
-      phoneNumber: '15991564371',
+      number: '843',
+      phoneNumber: 'string',
+      fixPhoneNumber: 'string',
     },
     {
-      name: 'Joao',
-      address: 'Rua Achiles Audi',
+      id: 2,
+      cpf: '51489876652',
+      name: 'Marcia',
+      address: 'Rua Achilhes Audfi',
       city: 'Cerquilho',
-      cpf: '51409677826',
-      fixPhoneNumber: '33856787',
-      id: 1,
       neighborhood: 'Centro',
-      number: '1043',
-      phoneNumber: '15991564371',
+      number: '1054',
+      phoneNumber: '11111111111',
+      fixPhoneNumber: '22222222',
     },
   ];
 
@@ -42,5 +43,10 @@ export class ClientDetailsComponent implements OnInit {
 
   closeModal() {
     this.bsModalRef.hide();
+  }
+
+  addClient(client: IClient) {
+    this.onClose.emit(client);
+    this.closeModal();
   }
 }

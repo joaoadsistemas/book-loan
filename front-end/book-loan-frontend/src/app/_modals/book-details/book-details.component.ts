@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit } from '@angular/core';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { IBook } from '../../_models/IBook';
 
@@ -7,33 +7,34 @@ import { IBook } from '../../_models/IBook';
   templateUrl: './book-details.component.html',
   styleUrl: './book-details.component.css',
 })
-export class BookDetailsComponent implements OnInit {
+export class BookDetailsComponent {
   bookInfo: string = '';
+  onClose: EventEmitter<any> = new EventEmitter();
 
   books: Array<IBook> = [
     {
-      id: 1,
-      author: 'Stephen King',
-      edition: '1',
+      id: 5,
       name: 'It',
+      author: 'Stephen King',
       publisher: 'Suma',
-      yearOfPublication: new Date(2014, 5, 1),
+      yearOfPublication: '2014-11-02T00:00:00',
+      edition: '1',
     },
     {
-      id: 1,
-      author: 'Stephen King',
+      id: 6,
+      name: '1984',
+      author: 'Geroge Orwell',
+      publisher: 'DarkSide',
+      yearOfPublication: '2024-03-31T00:00:00',
       edition: '1',
-      name: 'It',
-      publisher: 'Suma',
-      yearOfPublication: new Date(2014, 5, 1),
     },
     {
-      id: 1,
+      id: 7,
+      name: 'Iluminado',
       author: 'Stephen King',
-      edition: '1',
-      name: 'It',
       publisher: 'Suma',
-      yearOfPublication: new Date(2014, 5, 1),
+      yearOfPublication: '2024-03-31T00:00:00',
+      edition: '1',
     },
   ];
 
@@ -43,7 +44,8 @@ export class BookDetailsComponent implements OnInit {
     this.bsModalRef.hide();
   }
 
-  ngOnInit(): void {
-    throw new Error('Method not implemented.');
+  addBook(book: IBook) {
+    this.onClose.emit(book);
+    this.closeModal();
   }
 }

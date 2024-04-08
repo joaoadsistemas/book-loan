@@ -41,6 +41,14 @@ export class ClientService {
       );
   }
 
+  findClientById(id: number) {
+    return this.http.get<any>(this.baseUrl + 'client/' + id).pipe(
+      map((response) => {
+        return response;
+      })
+    );
+  }
+
   insertClient(client: IClient) {
     return this.http.post<any>(this.baseUrl + 'client', client).pipe(
       map((response) => {

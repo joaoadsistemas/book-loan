@@ -48,10 +48,6 @@ export class LoginComponent implements OnInit {
         this.toastr.success('Login successfully');
         this.router.navigate(['/']);
       },
-      error: (response: any) => {
-        this.toastr.error(response.error);
-        console.log(response);
-      },
     });
   }
 }

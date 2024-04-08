@@ -65,10 +65,10 @@ namespace LoanLoan.Application.Services
             return _mapper.Map<LoanDTO>(loanChanged);
         }
 
-        public async Task<bool> VerifyAvailable(int id)
+        public async Task<bool> VerifyAvailable(int[] idBooks)
         {
 
-            return await _loanRepository.VerifyAvailable(id);
+            return await _loanRepository.VerifyAvailable(idBooks);
            
         }
 

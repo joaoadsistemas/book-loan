@@ -15,10 +15,12 @@ namespace LoanLoan.API.Controllers
     {
 
         private readonly ILoanService _loanService;
+        private readonly ILoanBookService _loanBookService;
 
-        public LoanController(ILoanService loanService)
+        public LoanController(ILoanService loanService, ILoanBookService loanBookService)
         {
             _loanService = loanService;
+            _loanBookService = loanBookService;
         }
 
 
@@ -65,22 +67,40 @@ namespace LoanLoan.API.Controllers
         [HttpPost]
         public async Task<ActionResult> Insert([FromBody] LoanInsertDTO loanInsertDto)
         {
-
-            var available = await _loanService.VerifyAvailable(loanInsertDto.BookId);
-
+            var available = await _loanService.VerifyAvailable(loanInsertDto.idsBooks);
             if (!available)
             {
-                return BadRequest("The book is not available for loan");
+                return BadRequest("The book is not available for loan.");
             }
 
             loanInsertDto.LoanDate = DateTime.Now;
             loanInsertDto.Delivered = false;
-            LoanDTO loan = await _loanService.Insert(loanInsertDto);
-            if (loan == null)
+
+            var loanInsertDTOFinished = await _loanService.Insert(loanInsertDto);
+            if (loanInsertDTOFinished == null)
             {
-                return BadRequest("An error occurred while saving the loan");
+                return BadRequest("An error occurred while inserting the loan.");
             }
-            return Ok(loan);
+            else
+            {
+                List<LoanBookDTO> loanBookDTOs = new List<LoanBookDTO>();
+                LoanBookDTO loanBook;
+
+                foreach (var loanBookId in loanInsertDto.idsBooks)
+                {
+                    loanBook = new LoanBookDTO
+                    {
+                        LoanId = loanInsertDTOFinished.Id, 
+                        BookId = loanBookId 
+                    };
+                    loanBookDTOs.Add(loanBook);
+                }
+
+                
+                await _loanBookService.InsertManyAsync(loanBookDTOs);
+            }
+
+            return Ok(new { message = "Loan successfully inserted!" });
         }
 
 

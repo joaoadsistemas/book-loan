@@ -49,16 +49,17 @@ export class UserFormsComponent implements OnInit {
 
     this.userForms = this.fb.group({
       id: [0, [Validators.required, Validators.min(0)]],
-      name: [
+      name: ['', [Validators.required, Validators.maxLength(250)]],
+      email: [
         '',
-        [Validators.required, Validators.maxLength(250)],
+        [Validators.required, Validators.maxLength(200), Validators.email],
       ],
-      email: ['', [Validators.required, Validators.maxLength(200), Validators.email]],
       password: ['', passwordValidators],
       isAdmin: [false],
     });
-  }
 
+    
+  }
 
   register() {
     if (this.userForms.valid) {
@@ -66,9 +67,6 @@ export class UserFormsComponent implements OnInit {
         next: (response: any) => {
           this.toastr.success('User created successfully');
           this.userForms.reset();
-        },
-        error: (response: any) => {
-          this.toastr.error(response.error);
         },
       });
     }
@@ -80,9 +78,6 @@ export class UserFormsComponent implements OnInit {
         next: (response: any) => {
           this.toastr.success(response.message);
         },
-        error: (response: any) => {
-          this.toastr.error(response.error);
-        },
       });
     }
   }
@@ -93,11 +88,10 @@ export class UserFormsComponent implements OnInit {
       typeof obj.id == 'number' &&
       typeof obj.name == 'string' &&
       typeof obj.email == 'string' &&
-      (typeof obj.password == 'string' || obj.password == null || obj.password == undefined) &&
+      (typeof obj.password == 'string' ||
+        obj.password == null ||
+        obj.password == undefined) &&
       typeof obj.isAdmin == 'boolean'
     );
   }
-
-
-
 }

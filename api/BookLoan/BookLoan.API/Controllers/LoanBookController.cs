@@ -22,14 +22,14 @@ namespace BookLoan.API.Controllers
         public async Task<ActionResult> Delete(int id)
         {
             await _loanBookService.Delete(id);
-            return Ok(new { message = "Book was removed for loan successfully!" });
+            return Ok("Book was removed for loan successfully!");
         }
 
         [HttpPost]
         public async Task<ActionResult> Insert(LoanBookDTO loanBookDTO)
         {
             await _loanBookService.Insert(loanBookDTO);
-            return Ok(new { message = "Book was include in loan successfully!" });
+            return Ok("Book was include in loan successfully!" );
         }
 
         [HttpGet("loan/{id}")]

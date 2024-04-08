@@ -102,11 +102,13 @@ namespace Loan.Infra.Data.Repositories
             return loan;
         }
 
-        public async Task<bool> VerifyAvailable(int id)
+        public async Task<bool> VerifyAvailable(int[] idBooks)
         {
 
-            var loanExists = await _dbContext.Loans.Where(l => l.Id == id && l.Delivered == false).AnyAsync();
-            return !loanExists;
+            var verifyLoan = await _dbContext.Loans
+                .Where(x => x.LoanBooks.Any(lb => idBooks.Contains(lb.BookId)) && !x.Delivered)
+                .AnyAsync();
+            return !verifyLoan;
 
         }
 
