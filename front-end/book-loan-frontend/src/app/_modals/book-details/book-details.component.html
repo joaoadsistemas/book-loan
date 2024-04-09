@@ -17,6 +17,20 @@
         [showAdd]="true"
         (clickButton)="addBook(book)"
       ></app-info-book>
+      <div class="d-flex justify-content-center">
+        <pagination
+          [boundaryLinks]="true"
+          [totalItems]="pagination?.totalItems!"
+          [itemsPerPage]="pagination?.itemsPerPage!"
+          [maxSize]="10"
+          (pageChanged)="pageChanged($event)"
+          previousText="&lsaquo;"
+          nextText="&rsaquo;"
+          firstText="&laquo;"
+          lastText="&raquo;"
+        >
+        </pagination>
+      </div>
     </div>
   </div>
 </div>

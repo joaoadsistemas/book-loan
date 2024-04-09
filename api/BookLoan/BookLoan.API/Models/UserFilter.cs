@@ -4,11 +4,9 @@ namespace BookLoan.API.Models
 {
     public class UserFilter
     {
-        [MaxLength(250, ErrorMessage = "Name cannot exceed 250 characters.")]
-        public string Name { get; set; }
+        public string Name { get; set; } = "";
 
-        [MaxLength(250, ErrorMessage = "Email cannot exceed 250 characters.")]
-        public string Email { get; set; }
+        public string Email { get; set; } = "";
 
         public bool? IsAdmin { get; set; }
         public bool? IsNotAdmin { get; set; }

@@ -1,10 +1,36 @@
 <div class="modal-content">
   <div class="modal-header">
     <h5 class="modal-title">Clients</h5>
-    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="closeModal()"></button>
+    <button
+      type="button"
+      class="btn-close"
+      data-bs-dismiss="modal"
+      aria-label="Close"
+      (click)="closeModal()"
+    ></button>
   </div>
   <div class="modal-body">
     <div class="scrollable">
-      <app-info-client (clickButton)="addClient(client)" *ngFor="let client of clients" [client]="client" [showAdd]="true"></app-info-client>
+      <app-info-client
+        (clickButton)="addClient(client)"
+        *ngFor="let client of clients"
+        [client]="client"
+        [showAdd]="true"
+      ></app-info-client>
+      <div class="d-flex justify-content-center">
+        <pagination
+          [boundaryLinks]="true"
+          [totalItems]="pagination?.totalItems!"
+          [itemsPerPage]="pagination?.itemsPerPage!"
+          [maxSize]="10"
+          (pageChanged)="pageChanged($event)"
+          previousText="&lsaquo;"
+          nextText="&rsaquo;"
+          firstText="&laquo;"
+          lastText="&raquo;"
+        >
+        </pagination>
+      </div>
     </div>
   </div>
+</div>

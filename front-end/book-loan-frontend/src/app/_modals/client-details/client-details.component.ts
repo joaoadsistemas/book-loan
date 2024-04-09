@@ -1,6 +1,9 @@
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { Component, EventEmitter, OnInit } from '@angular/core';
 import { IClient } from '../../_models/IClient';
+import { ClientService } from '../../_services/client.service';
+import cli from '@angular/cli';
+import { IPagination, PaginatedResult } from '../../_models/IPagination';
 
 @Component({
   selector: 'app-client-details',
@@ -9,44 +12,44 @@ import { IClient } from '../../_models/IClient';
 })
 export class ClientDetailsComponent implements OnInit {
   clientInfo: string = '';
+  page: number = 1;
+  itemsPerPage: number = 10;
+  pagination?: IPagination;
   onClose: EventEmitter<any> = new EventEmitter();
   clients: Array<IClient> = [
-    {
-      id: 1,
-      cpf: '51409776543',
-      name: 'Luan',
-      address: 'Rua Limeira',
-      city: 'Santos',
-      neighborhood: 'Centro',
-      number: '843',
-      phoneNumber: 'string',
-      fixPhoneNumber: 'string',
-    },
-    {
-      id: 2,
-      cpf: '51489876652',
-      name: 'Marcia',
-      address: 'Rua Achilhes Audfi',
-      city: 'Cerquilho',
-      neighborhood: 'Centro',
-      number: '1054',
-      phoneNumber: '11111111111',
-      fixPhoneNumber: '22222222',
-    },
   ];
 
   ngOnInit(): void {
-    console.log(this.clientInfo);
+    this.searchClients();
   }
 
-  constructor(private bsModalRef: BsModalRef) {}
+  constructor(private bsModalRef: BsModalRef, private clientService: ClientService) {}
 
   closeModal() {
     this.bsModalRef.hide();
+  }
+
+  searchClients(){
+    return this.clientService.searchClient(this.clientInfo, this.page, this.itemsPerPage).subscribe({
+      next: (response) => {
+        if (response.result && response.pagination) {
+          this.clients = response.result;
+          this.pagination = response.pagination;
+        }
+      }
+    })
   }
 
   addClient(client: IClient) {
     this.onClose.emit(client);
     this.closeModal();
   }
+
+
+  pageChanged(event: any): void {
+    this.page = event.page;
+    this.searchClients();
+  }
+
+
 }

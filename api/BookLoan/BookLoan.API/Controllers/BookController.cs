@@ -47,6 +47,30 @@ namespace BookLoan.API.Controllers
             }
         }
 
+        [HttpGet("filter")]
+        public async Task<ActionResult> FindByFilter([FromQuery] BookFilter bookFilter)
+        {
+            var booksDTO = await _bookService.FindByFilter(bookFilter.Name, bookFilter.Author,
+                bookFilter.Publisher, bookFilter.YearOfPublication, bookFilter.Edition, bookFilter.PageNumber,
+                bookFilter.PageSize);
+
+            Response.AddPaginationHeader(new PaginationHeader(bookFilter.PageNumber,
+                bookFilter.PageSize, booksDTO.TotalCount, booksDTO.TotalPages));
+
+            return Ok(booksDTO);
+        }
+
+        [HttpGet("search")]
+        public async Task<ActionResult> FindBySearch([FromQuery] TermSearch termSearch)
+        {
+            var booksDTO = await _bookService.FindByFilter(termSearch.Term, termSearch.PageNumber, termSearch.PageSize);
+
+            Response.AddPaginationHeader(new PaginationHeader(termSearch.PageNumber,
+                termSearch.PageSize, booksDTO.TotalCount, booksDTO.TotalPages));
+
+            return Ok(booksDTO);
+        }
+
         [HttpPost]
         public async Task<ActionResult> Insert([FromBody] BookDTO bookDto)
         {
@@ -78,7 +102,7 @@ namespace BookLoan.API.Controllers
             {
                 
                 BookDTO book = await _bookService.Delete(id);
-                return Ok("Client was removed");
+                return Ok(book);
                 
 
             }
@@ -88,29 +112,7 @@ namespace BookLoan.API.Controllers
             }
         }
 
-        [HttpGet("filter")]
-        public async Task<ActionResult> FindByFilter([FromQuery] BookFilter bookFilter)
-        {
-            var booksDTO = await _bookService.FindByFilter(bookFilter.Name, bookFilter.Author,
-                bookFilter.Publisher, bookFilter.YearOfPublication, bookFilter.Edition, bookFilter.PageNumber,
-                bookFilter.PageSize);
-
-            Response.AddPaginationHeader(new PaginationHeader(bookFilter.PageNumber,
-                bookFilter.PageSize, booksDTO.TotalCount, booksDTO.TotalPages));
-
-            return Ok(booksDTO);
-        }
-
-        [HttpGet("search")]
-        public async Task<ActionResult> FindBySearch([FromQuery] TermSearch termSearch)
-        {
-            var booksDTO = await _bookService.FindByFilter(termSearch.Term, termSearch.PageNumber, termSearch.PageSize);
-
-            Response.AddPaginationHeader(new PaginationHeader(termSearch.PageNumber,
-                termSearch.PageSize, booksDTO.TotalCount, booksDTO.TotalPages));
-
-            return Ok(booksDTO);
-        }
+        
 
     }
 }

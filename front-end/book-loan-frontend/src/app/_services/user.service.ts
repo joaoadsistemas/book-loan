@@ -6,6 +6,7 @@ import { environment } from '../../environments/environment.development';
 import { ILogin } from '../_models/ILogin';
 import { IUserToken } from '../_models/IUserToken';
 import { PaginatedResult } from '../_models/IPagination';
+import { IFilterUser } from '../_models/IFilterUser';
 
 @Injectable({
   providedIn: 'root',
@@ -63,6 +64,37 @@ export class UserService {
         })
       );
   }
+
+  filterUser(filterUser: IFilterUser) {
+    let params = new HttpParams();
+    if (filterUser.name) params = params.append('name', filterUser.name);
+    if (filterUser.email) params = params.append('email', filterUser.email);
+    if (filterUser.isAdmin) params = params.append('isAdmin', filterUser.isAdmin);
+    if (filterUser.isNotAdmin) params = params.append('isNotAdmin', filterUser.isNotAdmin);
+    if (filterUser.active) params = params.append('active', filterUser.active);
+    if (filterUser.inactive) params = params.append('inactive', filterUser.inactive);
+    if (filterUser.pageNumber) params = params.append('pageNumber', filterUser.pageNumber);
+    if (filterUser.pageSize) params = params.append('pageSize', filterUser.pageSize);
+
+    return this.http.get<any>(this.baseUrl + 'user/filter', {
+      observe: 'response',
+      params,
+    }).pipe(
+      map((response) => {
+        console.log(response);
+        if (response.body) {
+          this.paginatedResult.result = response.body;
+        }
+        const pagination = response.headers.get('Pagination');
+        if (pagination) {
+          this.paginatedResult.pagination = JSON.parse(pagination);
+        }
+        console.log(this.paginatedResult);
+        return this.paginatedResult;
+      })
+    );
+  }
+
 
   findUserById(id?: number) {
     return this.http.get<any>(this.baseUrl + 'user/' + (id ? id : '0')).pipe(

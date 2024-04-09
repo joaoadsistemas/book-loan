@@ -1,4 +1,3 @@
-
 using BookLoan.API.Context;
 using BookLoan.API.Middleware;
 using BookLoan.Infra.Ioc;
@@ -49,11 +48,15 @@ namespace BookLoan.API
                     .AllowAnyMethod();
             });
 
+            // INTEGRANDO FRONTEND NA API
+            app.UseDefaultFiles();
+            app.UseStaticFiles();
+            app.MapControllers();
+            app.MapFallbackToController("index", "Fallback");
+            //
+
             app.UseAuthentication();
             app.UseAuthorization();
-
-
-            app.MapControllers();
 
             app.Run();
         }

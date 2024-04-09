@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BookLoan.Infra.Data.Migrations
 {
     [DbContext(typeof(SystemDbContext))]
-    [Migration("20240327183308_initial")]
+    [Migration("20240408233933_initial")]
     partial class initial
     {
         /// <inheritdoc />

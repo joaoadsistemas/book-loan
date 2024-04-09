@@ -26,7 +26,7 @@ namespace BookLoan.Infra.Data.Repositories
 
         public async Task<PagedList<Book>> FindAll(int pageNumber, int pageSize)
         {
-            var query = _dbContext.Books.AsNoTracking().AsQueryable();
+            var query = _dbContext.Books.Where(b => !b.Removed).AsNoTracking().AsQueryable();
             return await PaginationHelper.CreateAsync(query, pageNumber, pageSize);
         }
 
@@ -112,6 +112,7 @@ namespace BookLoan.Infra.Data.Repositories
 
             Book book = await _dbContext.Books.FirstOrDefaultAsync(c => c.Id == id)
                             ?? throw new ArgumentException($"Book with id: {id} does not exists");
+            book.Remove();
             _dbContext.Books.Update(book);
             await _dbContext.SaveChangesAsync();
             return book;

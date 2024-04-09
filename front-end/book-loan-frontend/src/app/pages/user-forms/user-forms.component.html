@@ -92,14 +92,29 @@
         </div>
       </div>
       <div class="col-md-4 d-flex flex-column justify-content-end">
-        <div class="form-check">
-          <input
-            class="form-check-input"
-            type="checkbox"
-            id="isAdmin"
-            formControlName="isAdmin"
-          />
-          <label for="isAdmin" class="form-check-label"> Admin </label>
+        <div class="row">
+          <div class="col-md-6">
+            <div class="form-check">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                id="isAdmin"
+                formControlName="isAdmin"
+              />
+              <label for="isAdmin" class="form-check-label"> Admin </label>
+            </div>
+          </div>
+          <div *ngIf="user" class="col-md-6">
+            <div class="form-check">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                id="active"
+                formControlName="active"
+              />
+              <label for="active" class="form-check-label"> Active </label>
+            </div>
+          </div>
         </div>
       </div>
     </div>

@@ -115,7 +115,7 @@ namespace BookLoan.API.Controllers
                if (user.IsAdmin)
                {
                    ClientDTO client = await _clientService.Delete(id);
-                   return Ok("Client was removed");
+                   return Ok(client);
                }
 
                return Unauthorized("Only admin can do this");

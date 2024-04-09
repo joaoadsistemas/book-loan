@@ -14,6 +14,7 @@
           [class.is-invalid]="
             clientForm.get('cpf')?.errors && clientForm.get('cpf')?.touched
           "
+          mask="000.000.000-00"
         />
         <div
           *ngIf="clientForm.get('cpf')?.hasError('required')"
@@ -174,12 +175,19 @@
             clientForm.get('fixPhoneNumber')?.errors &&
             clientForm.get('fixPhoneNumber')?.touched
           "
+          mask="(00) 0000-0000"
         />
         <div
           *ngIf="clientForm.get('fixPhoneNumber')?.hasError('required')"
           class="invalid-feedback"
         >
           Fix Phone-Number is required
+        </div>
+        <div
+          *ngIf="clientForm.get('fixPhoneNumber')?.hasError('minlength')"
+          class="invalid-feedback"
+        >
+          Fix Phone-Number must be 10 characters
         </div>
         <div
           *ngIf="clientForm.get('fixPhoneNumber')?.hasError('maxlength')"
@@ -200,6 +208,7 @@
             clientForm.get('phoneNumber')?.errors &&
             clientForm.get('phoneNumber')?.touched
           "
+          mask="(00) 00000-0000"
         />
         <div
           *ngIf="clientForm.get('phoneNumber')?.hasError('required')"
@@ -208,17 +217,34 @@
           Phone-Number is required
         </div>
         <div
+          *ngIf="clientForm.get('phoneNumber')?.hasError('minlength')"
+          class="invalid-feedback"
+        >
+          Phone-Number must be 11 characters
+        </div>
+        <div
           *ngIf="clientForm.get('phoneNumber')?.hasError('maxlength')"
           class="invalid-feedback"
         >
-          Phone-Number must be 10 characters
+          Phone-Number must be 11 characters
         </div>
       </div>
     </div>
     <div class="row">
       <div class="col-md-12 mt-3 text-end">
-        <button (click)=" client ? updateClient() : insertClient()" [disabled]="!clientForm.valid" class="btn btn-success">
+        <button
+          (click)="client ? updateClient() : insertClient()"
+          [disabled]="!clientForm.valid"
+          class="btn btn-success"
+        >
           {{ client ? "Update" : "Insert" }}
+        </button>
+        <button
+          *ngIf="client"
+          (click)="removeClient(client)"
+          class="btn btn-danger ms-2"
+        >
+          Remove
         </button>
       </div>
     </div>

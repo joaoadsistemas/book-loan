@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { BookService } from '../../_services/book.service';
 import { ToastrService } from 'ngx-toastr';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-book-forms',
@@ -71,6 +72,29 @@ export class BookFormsComponent implements OnInit {
         }
       });
     }
+  }
+
+  removeBook(book: IBook) {
+    Swal.fire({
+      title: 'Exclude Book',
+      text: 'Do you really want to delete this book?',
+      icon: 'warning',
+      showCancelButton: true,
+      cancelButtonText: 'Cancel',
+      confirmButtonText: 'Yes',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        if (this.book) {
+          this.bookService.removeBook(this.book).subscribe({
+            next: (response: any) => {
+              this.toastr.success('Book has been deleted successfully')
+              this.router.navigate(['/book'])
+            },
+          });
+        }
+      }
+
+    });
   }
 
   isIBook(obj: any): obj is IBook {

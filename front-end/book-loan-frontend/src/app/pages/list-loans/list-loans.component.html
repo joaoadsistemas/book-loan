@@ -1,0 +1,199 @@
+<div class="container mt-5">
+  <h2>Loans</h2>
+  <hr />
+  <button class="btn btn-sm btn-primary" routerLink="/loan">
+    <i class="fa fa-plus"></i> New Loan
+  </button>
+
+  <button
+    type="button"
+    class="btn btn-sm btn-primary ms-2"
+    (click)="isCollapsed = !isCollapsed"
+    [attr.aria-expanded]="!isCollapsed"
+    aria-controls="collapseBasic"
+  >
+    Filter
+  </button>
+  <div id="collapseBasic" [collapse]="isCollapsed">
+    <form class="mt-3" [formGroup]="loanForms">
+      <div class="row g-3">
+        <div class="col-md-4">
+          <label for="cpf" class="form-label">CPF</label>
+          <input
+            type="text"
+            id="cpf"
+            class="form-control"
+            placeholder="Input CPF"
+            formControlName="cpf"
+            [class.is-invalid]="
+              loanForms.get('cpf')?.errors && loanForms.get('cpf')?.touched
+            "
+            mask="000.000.000-00"
+          />
+          <div
+            *ngIf="loanForms.get('cpf')?.hasError('required')"
+            class="invalid-feedback"
+          >
+            Cpf is required
+          </div>
+          <div
+            *ngIf="loanForms.get('cpf')?.hasError('minlength')"
+            class="invalid-feedback"
+          >
+            Cpf must be 11 characters
+          </div>
+          <div
+            *ngIf="loanForms.get('cpf')?.hasError('maxlength')"
+            class="invalid-feedback"
+          >
+            Cpf must be 11 characters
+          </div>
+        </div>
+        <div class="col-md-8">
+          <label for="name" class="form-label">Name</label>
+          <input
+            type="text"
+            id="name"
+            class="form-control"
+            placeholder="Input Name"
+            formControlName="name"
+          />
+        </div>
+        <div class="col-md-3">
+          <label for="loanInitial" class="form-label">Loan Date Initial</label>
+          <input
+            type="date"
+            id="loanInitial"
+            class="form-control"
+            placeholder="Input Loan Date Initial"
+            formControlName="loanDateInitial"
+          />
+        </div>
+        <div class="col-md-3">
+          <label for="loanFinal" class="form-label">Loan Date Final</label>
+          <input
+            type="date"
+            id="loanFinal"
+            class="form-control"
+            placeholder="Input Loan Date Final"
+            formControlName="loanDateFinal"
+          />
+        </div>
+        <div class="col-md-3">
+          <label for="deliveryInitial" class="form-label"
+            >Delivery Date Initial</label
+          >
+          <input
+            type="date"
+            id="deliveryInitial"
+            class="form-control"
+            placeholder="Input Delivery Date Initial"
+            formControlName="deliverDateInitial"
+          />
+        </div>
+        <div class="col-md-3">
+          <label for="deliveryFinal" class="form-label"
+            >Delivery Date Final</label
+          >
+          <input
+            type="date"
+            id="deliveryFinal"
+            class="form-control"
+            placeholder="Input Delivery Date Final"
+            formControlName="deliverDateFinal"
+          />
+        </div>
+        <div class="col-md-4 d-flex flex-row">
+          <div class="col-md-6">
+            <div class="form-check">
+              <label for="delivered" class="form-check-label">Delivered</label>
+              <input
+                type="checkbox"
+                id="delivered"
+                class="form-check-input"
+                formControlName="delivered"
+              />
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-check">
+              <label for="notdelivered" class="form-check-label"
+                >Not Delivered</label
+              >
+              <input
+                type="checkbox"
+                id="notdelivered"
+                class="form-check-input"
+                formControlName="notDelivered"
+              />
+            </div>
+          </div>
+        </div>
+        <div class="col-md-12 mt-3 text-end">
+          <button
+            [disabled]="!loanForms.valid"
+            class="btn btn-success"
+            (click)="filter()"
+          >
+            Filter
+          </button>
+          <button
+            class="btn btn-primary ms-2"
+            (click)="getLoans(); loanForms.reset()"
+          >
+            Remove Filter
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <div class="table-responsive">
+    <table class="table">
+      <thead>
+        <tr>
+          <th></th>
+          <th>Client</th>
+          <th>CPF</th>
+          <th>Loan Date</th>
+          <th>Delivery Date</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let loan of loans">
+          <td>
+            <button class="btn btn-sm btn-primary" (click)="updateLoan(loan)">
+              <i class="fa fa-search"></i>
+            </button>
+          </td>
+          <td>
+            {{ loan.client.name }}
+          </td>
+          <td>
+            {{ cpfFormater(loan.client.cpf) }}
+          </td>
+          <td>
+            {{ dateFormatter(loan.loanDate) }}
+          </td>
+          <td>
+            {{ dateFormatter(loan.deliveryDate) }}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="d-flex justify-content-center">
+    <pagination
+      [boundaryLinks]="true"
+      [totalItems]="pagination?.totalItems!"
+      [itemsPerPage]="pagination?.itemsPerPage!"
+      [maxSize]="10"
+      (pageChanged)="pageChanged($event)"
+      previousText="&lsaquo;"
+      nextText="&rsaquo;"
+      firstText="&laquo;"
+      lastText="&raquo;"
+    >
+    </pagination>
+  </div>
+</div>

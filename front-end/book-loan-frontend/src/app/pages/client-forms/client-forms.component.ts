@@ -4,6 +4,7 @@ import { Component, OnInit } from '@angular/core';
 import { IClient } from '../../_models/IClient';
 import { ClientService } from '../../_services/client.service';
 import { ToastrService } from 'ngx-toastr';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-client-forms',
@@ -52,8 +53,8 @@ export class ClientFormsComponent implements OnInit {
       city: ['', [Validators.required, Validators.maxLength(50)]],
       neighborhood: ['', [Validators.required, Validators.maxLength(50)]],
       number: ['', [Validators.required, Validators.maxLength(50)]],
-      phoneNumber: ['', [Validators.required, Validators.maxLength(11)]],
-      fixPhoneNumber: ['', [Validators.required, Validators.maxLength(10)]],
+      phoneNumber: ['', [Validators.required, Validators.minLength(11), Validators.maxLength(11)]],
+      fixPhoneNumber: ['', [Validators.required,Validators.minLength(10) , Validators.maxLength(10)]],
     });
   }
 
@@ -74,6 +75,30 @@ export class ClientFormsComponent implements OnInit {
       },
     });
   }
+
+  removeClient(client: IClient) {
+    Swal.fire({
+      title: 'Exclude client',
+      text: 'Do you really want to delete this client?',
+      icon: 'warning',
+      showCancelButton: true,
+      cancelButtonText: 'Cancel',
+      confirmButtonText: 'Yes',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        if (this.client) {
+          this.clientService.removeClient(this.client).subscribe({
+            next: (response: any) => {
+              this.toastr.success('Client has been deleted successfully')
+              this.router.navigate(['/client'])
+            },
+          });
+        }
+      }
+
+    });
+  }
+
 
   isIClient(obj: any): obj is IClient {
     return (

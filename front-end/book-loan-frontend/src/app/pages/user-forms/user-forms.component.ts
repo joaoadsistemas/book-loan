@@ -56,9 +56,10 @@ export class UserFormsComponent implements OnInit {
       ],
       password: ['', passwordValidators],
       isAdmin: [false],
+      active: [false]
     });
 
-    
+
   }
 
   register() {
@@ -91,7 +92,8 @@ export class UserFormsComponent implements OnInit {
       (typeof obj.password == 'string' ||
         obj.password == null ||
         obj.password == undefined) &&
-      typeof obj.isAdmin == 'boolean'
+      typeof obj.isAdmin == 'boolean' &&
+      typeof obj.active == 'boolean'
     );
   }
 }
