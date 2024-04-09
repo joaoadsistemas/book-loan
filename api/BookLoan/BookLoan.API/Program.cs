@@ -43,7 +43,7 @@ namespace BookLoan.API
 
             app.UseCors(builder =>
             {
-                builder.WithOrigins("https://localhost:7235", "http://localhost:4200")
+                builder.WithOrigins("https://localhost:7235", "http://localhost:4200", "https://loanbook.azurewebsites.net")
                     .AllowAnyHeader()
                     .AllowAnyMethod();
             });

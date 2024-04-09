@@ -23,7 +23,7 @@ export class ErrorInterceptor implements HttpInterceptor {
           switch (err.status) {
             case 400:
               if (err.error.errors) {
-                const modalStateErrors = [];
+                const modalStateErrors: any[] = []; // Add type annotation here
                 for (const key in err.error.errors) {
                   if (err.error.errors[key]) {
                     modalStateErrors.push(err.error.errors[key]);
@@ -58,7 +58,7 @@ export class ErrorInterceptor implements HttpInterceptor {
           }
         }
 
-        return throwError(err);
+        return throwError(() => new Error(err));
       })
     );
   }
